@@ -1,12 +1,14 @@
 {
-  "name": "mon-workspace",
-  "version": "0.0.0",
+  "name": "ngx-dynamic-form",
+  "version": "1.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
-    "build": "ng build",
-    "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "build": "ng build ngx-dynamic-form",
+    "watch": "ng build ngx-dynamic-form --watch --configuration development",
+    "test": "ng test ngx-dynamic-form --watch=false --browsers=ChromeHeadless",
+    "test:watch": "ng test ngx-dynamic-form",
+    "pack:lib": "npm run build && cd dist/ngx-dynamic-form && npm pack",
+    "publish:lib": "npm run build && cd dist/ngx-dynamic-form && npm publish --access public"
   },
   "private": true,
   "dependencies": {
