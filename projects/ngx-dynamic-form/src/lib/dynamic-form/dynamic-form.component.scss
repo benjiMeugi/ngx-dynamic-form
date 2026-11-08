@@ -1,0 +1,48 @@
+:host {
+  display: block;
+  width: 100%;
+  --df-primary: var(--primary, #2563eb);
+  --df-primary-hover: var(--primary-hover, #1d4ed8);
+  --df-ring: var(--ring, rgba(37, 99, 235, 0.25));
+  --df-radius: var(--radius, 0.5rem);
+}
+
+[libDragDrop].drag-over {
+  border-color: var(--df-primary);
+  background-color: rgba(37, 99, 235, 0.05);
+}
+
+:host ::ng-deep {
+  /* Direct native controls */
+  input.border-red-500,
+  textarea.border-red-500,
+  select.border-red-500 {
+    border-color: #ef4444 !important;
+  }
+
+  input.border-red-500:focus,
+  textarea.border-red-500:focus,
+  select.border-red-500:focus {
+    box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.2) !important;
+    border-color: #ef4444 !important;
+  }
+
+  /* Nested custom component inputs */
+  .border-red-500 input,
+  .border-red-500 textarea,
+  .border-red-500 select,
+  .border-red-500 [libDragDrop],
+  .border-red-500 > div > input,
+  .border-red-500 > div > button,
+  .border-red-500 .border {
+    border-color: #ef4444 !important;
+  }
+
+  .border-red-500 input:focus,
+  .border-red-500 textarea:focus,
+  .border-red-500 select:focus,
+  .border-red-500 > div > input:focus {
+    box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.2) !important;
+    border-color: #ef4444 !important;
+  }
+}

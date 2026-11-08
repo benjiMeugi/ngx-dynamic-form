@@ -3,5 +3,79 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
+    "ngx-hello-text": {
+      "projectType": "library",
+      "root": "projects/ngx-hello-text",
+      "sourceRoot": "projects/ngx-hello-text/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "project": "projects/ngx-hello-text/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/ngx-hello-text/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/ngx-hello-text/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "tsConfig": "projects/ngx-hello-text/tsconfig.spec.json",
+            "polyfills": [
+              "zone.js",
+              "zone.js/testing"
+            ]
+          }
+        }
+      }
+    },
+    "ngx-dynamic-form": {
+      "projectType": "library",
+      "root": "projects/ngx-dynamic-form",
+      "sourceRoot": "projects/ngx-dynamic-form/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "project": "projects/ngx-dynamic-form/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/ngx-dynamic-form/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/ngx-dynamic-form/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "tsConfig": "projects/ngx-dynamic-form/tsconfig.spec.json",
+            "polyfills": [
+              "zone.js",
+              "zone.js/testing"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "schematics": {
+    "@schematics/angular:component": {
+      "style": "scss"
+    },
+    "@schematics/angular:application": {
+      "style": "scss"
+    }
   }
 }

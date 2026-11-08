@@ -1,0 +1,232 @@
+@if (form) {
+<form [formGroup]="form" (ngSubmit)="onSubmit()" [class]="gridClass">
+
+  @if (title) {
+    <h2 class="col-span-full text-xl font-semibold text-gray-800 dark:text-slate-100 tracking-tight">{{ title }}</h2>
+  }
+
+  @for (field of sortedFields; track field.name) {
+    @if (isVisible(field)) {
+      @if (getCustomFieldTemplate(field.type); as customTpl) {
+        <div [ngClass]="field.colClass ?? 'col-span-full'" class="flex flex-col gap-1.5">
+          @if (field.label) {
+            <label [for]="field.name" class="text-sm font-medium text-gray-700 dark:text-slate-300">
+              {{ field.label }}
+              @if (field.validation?.required) {
+                <span class="text-red-500 dark:text-red-400 ml-0.5">*</span>
+              }
+            </label>
+          }
+
+          <ng-container *ngTemplateOutlet="customTpl; context: { $implicit: field, field: field, control: form.get(field.name) }" />
+
+          @if (field.helpText) {
+            <span class="text-xs text-gray-500 dark:text-slate-400">{{ field.helpText }}</span>
+          }
+
+          @if (getErrorMessageForControl(form.get(field.name), field) ?? getCrossErrorMessage(field.name); as errorMsg) {
+            <span class="text-xs text-red-500 dark:text-red-400 font-medium">{{ errorMsg }}</span>
+          }
+        </div>
+      } @else if (field.type === 'array') {
+        <div class="col-span-full flex flex-col gap-3 border border-gray-200 dark:border-slate-800 rounded-xl p-5 bg-gray-50/40 dark:bg-slate-900/40 shadow-sm">
+          @if (field.label) {
+            <label class="text-sm font-semibold text-gray-800 dark:text-slate-200">{{ field.label }}</label>
+          }
+
+          <lib-array-field 
+            [field]="field" 
+            [formArray]="getFormArray(field.name)" 
+            [optionsMap]="optionsMap"
+            [lazyState]="lazyState" 
+            [customFieldTemplates]="customFieldTemplates"
+            (lazySearch)="onLazySearch($event.fieldName, $event.term)"
+            (lazyScrollEnd)="onLazyScrollEnd($event)" 
+          />
+        </div>
+      } @else {
+
+        <div [ngClass]="field.colClass ?? 'col-span-full'" class="flex flex-col gap-1.5">
+
+          @if (field.label && field.type !== 'checkbox' && field.type !== 'toggle') {
+            <label [for]="field.name" class="text-sm font-medium text-gray-700 dark:text-slate-300">
+              {{ field.label }}
+              @if (field.validation?.required) {
+                <span class="text-red-500 dark:text-red-400 ml-0.5">*</span>
+              }
+            </label>
+          }
+          <lib-input-group [prefix]="field.addon?.prefix" [suffix]="field.addon?.suffix">
+            @switch (field.type) {
+              
+              @case ('toggle') {
+                <lib-toggle-field
+                  [formControlName]="field.name"
+                  [label]="field.label"
+                  [tabIndex]="field.order ?? 0"
+                />
+              }
+
+              @case ('time') {
+                <lib-time-field
+                  [formControlName]="field.name"
+                  [minTime]="field.validation?.minTime"
+                  [maxTime]="field.validation?.maxTime"
+                  [tabIndex]="field.order ?? 0"
+                  [class.border-red-500]="hasControlError(field.name)"
+                />
+              }
+
+              @case ('textarea') {
+                <textarea 
+                  [id]="field.name" 
+                  [formControlName]="field.name" 
+                  [placeholder]="field.placeholder ?? ''"
+                  [tabindex]="field.order ?? 0"
+                  [class.border-red-500]="hasControlError(field.name)"
+                  class="w-full border border-gray-200 dark:border-slate-700 rounded-lg px-3.5 py-2.5 text-sm bg-white dark:bg-slate-900 text-gray-900 dark:text-slate-100 placeholder:text-gray-400 dark:placeholder:text-slate-500 transition-all duration-150 focus:outline-none focus:border-blue-500 dark:focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20 disabled:bg-gray-50 disabled:text-gray-400 dark:disabled:bg-slate-800/60"
+                  rows="3">
+                </textarea>
+              }
+
+              @case ('integer') {
+                <lib-integer-field
+                  [formControlName]="field.name"
+                  [tabIndex]="field.order ?? 0"
+                  [class.border-red-500]="hasControlError(field.name)"
+                />
+              }
+
+              @case ('select') {
+                <lib-select-field 
+                  [formControlName]="field.name" 
+                  [items]="getSelectItems(field)"
+                  [placeholder]="field.placeholder ?? 'Sélectionner...'" 
+                  [clearable]="!field.validation?.required"
+                  [multiple]="field.multiple ?? false" 
+                  [lazy]="!!field.optionSource?.lazy"
+                  [loading]="lazyState[field.name]?.loading ?? false" 
+                  (searchChange)="onLazySearch(field.name, $event)"
+                  (scrolledToBottom)="onLazyScrollEnd(field.name)"
+                  [tabIndex]="field.order ?? 0"
+                  [class.border-red-500]="hasControlError(field.name)"
+                />
+              }
+
+              @case ('radio') {
+                <div class="flex flex-col gap-2.5 pt-1">
+                  @for (opt of getSelectItems(field); track opt.key) {
+                  <label class="flex items-center gap-2.5 text-sm text-gray-700 dark:text-slate-300 cursor-pointer select-none">
+                    <input type="radio" [formControlName]="field.name" [value]="opt.key" [tabIndex]="field.order ?? 0"
+                      class="h-4 w-4 border-gray-300 text-blue-600 focus:ring-blue-500 dark:border-slate-700 dark:bg-slate-900" />
+                    <span>{{ opt.value }}</span>
+                  </label>
+                  }
+                </div>
+              }
+
+              @case ('checkbox') {
+              <label class="flex items-center gap-2.5 text-sm text-gray-700 dark:text-slate-300 cursor-pointer select-none pt-1">
+                <input type="checkbox" [id]="field.name" [formControlName]="field.name" [tabIndex]="field.order ?? 0"
+                  class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 dark:border-slate-700 dark:bg-slate-900" />
+                <span>{{ field.label }}</span>
+                @if (field.validation?.required) {
+                  <span class="text-red-500 dark:text-red-400 ml-0.5">*</span>
+                }
+              </label>
+              }
+
+              @case ('password') {
+                <lib-password-field
+                  [formControlName]="field.name"
+                  [placeholder]="field.placeholder ?? ''"
+                  [showToggle]="field.showPasswordToggle ?? false"
+                  [tabIndex]="field.order ?? 0"
+                  [class.border-red-500]="hasControlError(field.name)"
+                />
+              }
+
+              @case ('date') {
+                <lib-date-field
+                  [formControlName]="field.name"
+                  [minDate]="field.validation?.minDate"
+                  [maxDate]="field.validation?.maxDate"
+                  [tabIndex]="field.order ?? 0"
+                  [class.border-red-500]="hasControlError(field.name)"
+                />
+              }
+
+              @case ('tel') {
+                <lib-phone-field 
+                  [formControlName]="field.name" 
+                  [defaultCountryIso]="field.phoneConfig?.defaultCountry ?? 'FR'" 
+                  [tabIndex]="field.order ?? 0"
+                  [class.border-red-500]="hasControlError(field.name)"
+                />
+              }
+
+              @case ('file') {
+                <lib-file-field 
+                  [formControlName]="field.name" 
+                  [fieldId]="field.name"
+                  [multiple]="field.fileConfig?.multiple ?? false" 
+                  [accept]="field.fileConfig?.accept ?? ''"
+                  [maxSizeMb]="field.fileConfig?.maxSizeMb" 
+                  [maxFiles]="field.fileConfig?.maxFiles" 
+                  [tabIndex]="field.order ?? 0"
+                  [class.border-red-500]="hasControlError(field.name)"
+                />
+              }
+
+              @case ('decimal') {
+                <lib-decimal-field
+                  class="min-w-0 flex-1"
+                  [formControlName]="field.name"
+                  [decimals]="field.decimalConfig?.decimals ?? 2"
+                  [decimalSeparator]="field.decimalConfig?.decimalSeparator ?? '.'"
+                  [placeholder]="field.placeholder ?? ''"
+                  [tabIndex]="field.order ?? 0"
+                  [class.border-red-500]="hasControlError(field.name)"
+                />
+              }
+
+              @default {
+                <input
+                  [id]="field.name"
+                  [type]="field.type"
+                  [formControlName]="field.name"
+                  [placeholder]="field.placeholder ?? ''"
+                  [tabindex]="field.order ?? 0"
+                  [class.border-red-500]="hasControlError(field.name)"
+                  class="h-10 w-full border border-gray-200 dark:border-slate-700 rounded-lg px-3.5 py-2 text-sm bg-white dark:bg-slate-900 text-gray-900 dark:text-slate-100 placeholder:text-gray-400 dark:placeholder:text-slate-500 transition-all duration-150 focus:outline-none focus:border-blue-500 dark:focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20 disabled:bg-gray-50 disabled:text-gray-400 disabled:cursor-not-allowed dark:disabled:bg-slate-800/60"
+                />
+              }
+            }
+          </lib-input-group>
+
+          @if (field.helpText) {
+            <span class="text-xs text-gray-500 dark:text-slate-400">{{ field.helpText }}</span>
+          }
+
+          @if (getErrorMessageForControl(form.get(field.name), field) ?? getCrossErrorMessage(field.name); as errorMsg) {
+            <span class="text-xs text-red-500 dark:text-red-400 font-medium">{{ errorMsg }}</span>
+          }
+        </div>
+      }
+    }
+  }
+
+  <div class="col-span-full pt-3">
+    @if (actionsTemplate) {
+      <ng-container *ngTemplateOutlet="actionsTemplate; context: { $implicit: form, isValid: form.valid, onSubmit: onSubmit.bind(this) }" />
+    } @else {
+      <div class="flex items-center gap-3">
+        <button type="submit" class="h-10 px-5 rounded-lg bg-blue-600 hover:bg-blue-700 active:scale-[0.98] text-white font-medium text-sm shadow-sm transition-all focus:outline-none focus:ring-2 focus:ring-blue-500/30">
+          {{ submitLabel }}
+        </button>
+        <ng-content select="[formActions]" />
+      </div>
+    }
+  </div>
+</form>
+}

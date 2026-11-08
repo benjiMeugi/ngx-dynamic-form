@@ -1,0 +1,19 @@
+:host ::ng-deep {
+  .border-red-500 input,
+  .border-red-500 textarea,
+  .border-red-500 select,
+  .border-red-500 [libDragDrop],
+  .border-red-500 > div > input,
+  .border-red-500 > div > button,
+  .border-red-500 .border {
+    border-color: #ef4444 !important;
+  }
+
+  .border-red-500 input:focus,
+  .border-red-500 textarea:focus,
+  .border-red-500 select:focus,
+  .border-red-500 > div > input:focus {
+    box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.2) !important;
+    border-color: #ef4444 !important;
+  }
+}

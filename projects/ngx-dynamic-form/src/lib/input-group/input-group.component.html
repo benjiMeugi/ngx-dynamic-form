@@ -1,0 +1,15 @@
+<div class="flex items-stretch" [class]="radiusClasses">
+    @if (prefix) {
+    <span class="shrink-0 flex items-center px-3.5 bg-gray-50 border border-r-0 border-gray-200 rounded-l-lg text-sm text-gray-500 select-none dark:bg-slate-800 dark:border-slate-700 dark:text-slate-400">
+        {{ prefix }}
+    </span>
+    }
+    <div class="min-w-0 flex-1">
+        <ng-content />
+    </div>
+    @if (suffix) {
+    <span class="shrink-0 flex items-center px-3.5 bg-gray-50 border border-l-0 border-gray-200 rounded-r-lg text-sm text-gray-500 select-none dark:bg-slate-800 dark:border-slate-700 dark:text-slate-400">
+        {{ suffix }}
+    </span>
+    }
+</div>

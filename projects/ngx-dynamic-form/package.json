@@ -1,0 +1,40 @@
+{
+  "name": "@benjimeugi/ngx-dynamic-form",
+  "version": "1.0.0",
+  "description": "Moteur de formulaires dynamiques Angular 19+ basé sur JSON, stylisé avec Tailwind CSS, supportant validation réactive, champs conditionnels, templates personnalisés et dark mode.",
+  "keywords": [
+    "angular",
+    "dynamic-forms",
+    "forms",
+    "reactive-forms",
+    "tailwind",
+    "json-schema",
+    "validation",
+    "dark-mode",
+    "standalone"
+  ],
+  "author": "benjimeugi <benbosspayaro@gmail.com>",
+  "license": "MIT",
+  "homepage": "https://github.com/benjiMeugi/ngx-dynamic-form#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/benjiMeugi/ngx-dynamic-form.git"
+  },
+  "bugs": {
+    "url": "https://github.com/benjiMeugi/ngx-dynamic-form/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "peerDependencies": {
+    "@angular/cdk": "^19.0.0",
+    "@angular/common": "^19.0.0",
+    "@angular/core": "^19.0.0",
+    "@angular/forms": "^19.0.0",
+    "libphonenumber-js": "^1.13.12"
+  },
+  "dependencies": {
+    "tslib": "^2.3.0"
+  },
+  "sideEffects": false
+}
