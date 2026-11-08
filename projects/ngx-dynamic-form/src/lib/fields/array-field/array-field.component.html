@@ -44,6 +44,16 @@
 
                             @switch (subField.type) {
 
+                                @case ('chips') {
+                                    <lib-chips-field
+                                        [formControlName]="subField.name"
+                                        [placeholder]="subField.placeholder"
+                                        [chipsConfig]="subField.chipsConfig"
+                                        [tabIndex]="subField.order ?? 0"
+                                        [class.border-red-500]="hasSubControlError(group, subField.name)"
+                                    />
+                                }
+
                                 @case ('toggle') {
                                     <lib-toggle-field
                                         [formControlName]="subField.name"

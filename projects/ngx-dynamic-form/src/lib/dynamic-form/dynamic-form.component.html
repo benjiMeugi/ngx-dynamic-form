@@ -59,6 +59,16 @@
           <lib-input-group [prefix]="field.addon?.prefix" [suffix]="field.addon?.suffix">
             @switch (field.type) {
               
+              @case ('chips') {
+                <lib-chips-field
+                  [formControlName]="field.name"
+                  [placeholder]="field.placeholder"
+                  [chipsConfig]="field.chipsConfig"
+                  [tabIndex]="field.order ?? 0"
+                  [class.border-red-500]="hasControlError(field.name)"
+                />
+              }
+
               @case ('toggle') {
                 <lib-toggle-field
                   [formControlName]="field.name"

@@ -19,6 +19,7 @@ import { IntegerFieldComponent } from '../integer-field/integer-field.component'
 import { DecimalFieldComponent } from '../decimal-field/decimal-field.component';
 import { ToggleFieldComponent } from '../toggle-field/toggle-field.component';
 import { TimeFieldComponent } from '../time-field/time-field.component';
+import { ChipsFieldComponent } from '../chips-field/chips-field.component';
 import { CustomFieldContext } from '../../directives/custom-field.directive';
 
 interface LazySelectState {
@@ -40,7 +41,8 @@ interface LazySelectState {
     IntegerFieldComponent,
     DecimalFieldComponent,
     ToggleFieldComponent,
-    TimeFieldComponent
+    TimeFieldComponent,
+    ChipsFieldComponent
   ],
   templateUrl: './array-field.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

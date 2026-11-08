@@ -23,6 +23,7 @@ import { DecimalFieldComponent } from '../fields/decimal-field/decimal-field.com
 import { InputGroupComponent } from '../input-group/input-group.component';
 import { ToggleFieldComponent } from '../fields/toggle-field/toggle-field.component';
 import { TimeFieldComponent } from '../fields/time-field/time-field.component';
+import { ChipsFieldComponent } from '../fields/chips-field/chips-field.component';
 import { CustomFieldContext, CustomFieldDirective } from '../directives/custom-field.directive';
 
 interface LazySelectState {
@@ -50,6 +51,7 @@ interface LazySelectState {
     InputGroupComponent,
     ToggleFieldComponent,
     TimeFieldComponent,
+    ChipsFieldComponent,
     CustomFieldDirective
   ],
   templateUrl: './dynamic-form.component.html',

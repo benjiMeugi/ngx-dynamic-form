@@ -15,9 +15,6 @@
       ],
       "ngx-dynamic-form": [
         "./dist/ngx-dynamic-form"
-      ],
-      "ngx-hello-text": [
-        "./dist/ngx-hello-text"
       ]
     },
     "skipLibCheck": true,

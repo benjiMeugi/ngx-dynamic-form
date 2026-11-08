@@ -26,4 +26,5 @@ export * from './lib/fields/decimal-field/decimal-field.component';
 export * from './lib/input-group/input-group.component';
 export * from './lib/fields/toggle-field/toggle-field.component';
 export * from './lib/fields/time-field/time-field.component';
+export * from './lib/fields/chips-field/chips-field.component';
 export * from './lib/directives/custom-field.directive';
