@@ -190,7 +190,7 @@ export class DynamicFormComponent implements OnInit, OnChanges {
   getSelectItems(field: FieldConfig): KeyValue[] {
     return field.optionSource?.lazy
       ? this.lazyState[field.name]?.items ?? []
-      : this.optionsMap[field.name] ?? [];
+      : this.optionsMap[field.name] ?? field.optionSource?.options ?? [];
   }
 
   onLazyScrollEnd(fieldName: string): void {

@@ -60,6 +60,11 @@ export interface OptionSource {
     lazy?: boolean;          // active pagination + recherche serveur
     pageSize?: number;       // défaut: 20
     searchParamName?: string; // ex: 'q' -> l'API doit accepter ?q=terme&page=1&pageSize=20
+    keyProperty?: string;     // Propriété pour la clé (ex: 'id', défaut: 'id' ou 'key')
+    valueProperty?: string;   // Propriété pour la valeur (ex: 'label', défaut: 'label', 'name' ou 'value')
+    dataPath?: string;        // Chemin vers les données dans la réponse API (ex: 'body.response_data', 'data')
+    labelFormat?: (item: any) => string; // Fonction de formatage personnalisée du libellé
+    queryParams?: Record<string, string | number | boolean>; // Paramètres HTTP additionnels (ex: { orderBy: 'label' })
 }
 
 export type ValidationErrorKey = 'required' | 'min' | 'max' | 'minLength' | 'maxLength' | 'email' | 'integer' | 'pattern' | 'phone' | 'minDate' | 'maxDate' | 'minTime' | 'maxTime';

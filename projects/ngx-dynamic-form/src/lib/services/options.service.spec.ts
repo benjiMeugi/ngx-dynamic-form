@@ -49,4 +49,65 @@ describe('OptionsService', () => {
     expect(req.request.params.get('pageSize')).toBe('20');
     req.flush({ items: [], total: 0 });
   });
+
+  it('extrait automatiquement les données depuis une enveloppe body.response_data avec id/label', () => {
+    let res: any;
+    service.load({ url: '/api/languages' }).subscribe(r => (res = r));
+    http.expectOne('/api/languages').flush({
+      success: true,
+      body: {
+        response_data: [
+          { id: 1, label: 'Français', code: 'fr' },
+          { id: 2, label: 'Anglais', code: 'en' }
+        ]
+      }
+    });
+    expect(res).toEqual([
+      { key: '1', value: 'Français' },
+      { key: '2', value: 'Anglais' }
+    ]);
+  });
+
+  it('prend en charge dataPath, keyProperty, valueProperty et queryParams', () => {
+    let res: any;
+    service.load({
+      url: '/api/custom',
+      dataPath: 'result.payload',
+      keyProperty: 'uuid',
+      valueProperty: 'title',
+      queryParams: { active: true }
+    }).subscribe(r => (res = r));
+
+    const req = http.expectOne(r => r.url === '/api/custom');
+    expect(req.request.params.get('active')).toBe('true');
+    req.flush({
+      result: {
+        payload: [
+          { uuid: 'u-1', title: 'Option 1' },
+          { uuid: 'u-2', title: 'Option 2' }
+        ]
+      }
+    });
+
+    expect(res).toEqual([
+      { key: 'u-1', value: 'Option 1' },
+      { key: 'u-2', value: 'Option 2' }
+    ]);
+  });
+
+  it('prend en charge un labelFormat personnalisé', () => {
+    let res: any;
+    service.load({
+      url: '/api/users',
+      labelFormat: (u) => `${u.first_name} ${u.last_name} (${u.role})`
+    }).subscribe(r => (res = r));
+
+    http.expectOne('/api/users').flush([
+      { id: 10, first_name: 'Jean', last_name: 'Dupont', role: 'Admin' }
+    ]);
+
+    expect(res).toEqual([
+      { key: '10', value: 'Jean Dupont (Admin)' }
+    ]);
+  });
 });
