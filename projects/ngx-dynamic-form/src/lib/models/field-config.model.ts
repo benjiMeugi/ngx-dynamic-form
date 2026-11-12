@@ -63,7 +63,7 @@ export interface OptionSource {
     keyProperty?: string;     // Propriété pour la clé (ex: 'id', défaut: 'id' ou 'key')
     valueProperty?: string;   // Propriété pour la valeur (ex: 'label', défaut: 'label', 'name' ou 'value')
     dataPath?: string;        // Chemin vers les données dans la réponse API (ex: 'body.response_data', 'data')
-    labelFormat?: (item: any) => string; // Fonction de formatage personnalisée du libellé
+    labelFormat?: string | ((item: any) => string); // Chaîne template (ex: '{first_name} {last_name}') ou fonction de formatage
     queryParams?: Record<string, string | number | boolean>; // Paramètres HTTP additionnels (ex: { orderBy: 'label' })
 }
 

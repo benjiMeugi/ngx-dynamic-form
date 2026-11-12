@@ -110,4 +110,20 @@ describe('OptionsService', () => {
       { key: '10', value: 'Jean Dupont (Admin)' }
     ]);
   });
+
+  it('prend en charge un labelFormat sous forme de template string', () => {
+    let res: any;
+    service.load({
+      url: '/api/users',
+      labelFormat: '{first_name} {last_name} ({role})'
+    }).subscribe(r => (res = r));
+
+    http.expectOne('/api/users').flush([
+      { id: 10, first_name: 'Jean', last_name: 'Dupont', role: 'Admin' }
+    ]);
+
+    expect(res).toEqual([
+      { key: '10', value: 'Jean Dupont (Admin)' }
+    ]);
+  });
 });

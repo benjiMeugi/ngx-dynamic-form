@@ -117,8 +117,12 @@ export class OptionsService {
 
     // Résolution de la valeur (libellé)
     let value: string;
-    if (source.labelFormat) {
+    if (typeof source.labelFormat === 'function') {
       value = source.labelFormat(item);
+    } else if (typeof source.labelFormat === 'string') {
+      value = source.labelFormat.replace(/\{(\w+)\}/g, (_, prop) =>
+        item[prop] !== undefined && item[prop] !== null ? String(item[prop]) : ''
+      );
     } else if (source.valueProperty && item[source.valueProperty] !== undefined) {
       value = String(item[source.valueProperty]);
     } else if (item.label !== undefined) {
