@@ -46,7 +46,7 @@
             class="w-full px-3.5 py-2 border-b border-gray-100 dark:border-slate-800 text-xs bg-transparent text-gray-900 dark:text-slate-100 placeholder:text-gray-400 dark:placeholder:text-slate-500 focus:outline-none" />
 
         <cdk-virtual-scroll-viewport itemSize="36" class="h-48" (scrolledIndexChange)="onScrolledIndexChange($event)">
-            @for (opt of items; track opt.key) {
+            @for (opt of filteredItems; track opt.key) {
             <div (click)="selectOption(opt)"
                 class="px-3.5 py-2 text-xs cursor-pointer hover:bg-blue-50/80 dark:hover:bg-slate-800/80 flex items-center gap-2.5 text-gray-800 dark:text-slate-200 transition-colors"
                 [class.bg-blue-50]="!multiple && isSelected(opt)"
@@ -61,7 +61,7 @@
             @if (loading) {
             <div class="px-3 py-3 text-xs text-gray-400 dark:text-slate-500 text-center">Chargement...</div>
             }
-            @if (!loading && items.length === 0) {
+            @if (!loading && filteredItems.length === 0) {
             <div class="px-3 py-3 text-xs text-gray-400 dark:text-slate-500 text-center">Aucun résultat</div>
             }
         </cdk-virtual-scroll-viewport>

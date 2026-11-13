@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, forwardRef, HostListener, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, forwardRef, HostListener, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ScrollingModule } from '@angular/cdk/scrolling';
@@ -17,7 +17,7 @@ import { KeyValue } from '../../models/field-config.model';
     multi: true,
   }],
 })
-export class SelectFieldComponent implements ControlValueAccessor {
+export class SelectFieldComponent implements ControlValueAccessor, OnChanges {
   @Input() items: KeyValue[] = [];
   @Input() placeholder = 'Sélectionner...';
   @Input() clearable = true;
@@ -45,10 +45,40 @@ export class SelectFieldComponent implements ControlValueAccessor {
 
   constructor(private elementRef: ElementRef, private cdr: ChangeDetectorRef) {}
 
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['items']) {
+      if (!this.multiple && this.selectedValue) {
+        const found = this.items.find(i => i.key === this.selectedValue);
+        this.selectedLabel = found ? found.value : '';
+      }
+      this.cdr.markForCheck();
+    }
+  }
+
+  private normalizeString(str: string): string {
+    return str
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '');
+  }
+
+  get filteredItems(): KeyValue[] {
+    if (this.lazy || !this.searchTerm.trim()) {
+      return this.items;
+    }
+    const term = this.normalizeString(this.searchTerm.trim());
+    return this.items.filter(item => {
+      const val = item.value ? this.normalizeString(String(item.value)) : '';
+      const key = item.key ? this.normalizeString(String(item.key)) : '';
+      return val.includes(term) || key.includes(term);
+    });
+  }
+
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent): void {
     if (!this.elementRef.nativeElement.contains(event.target)) {
       this.isOpen = false;
+      this.searchTerm = '';
       this.cdr.markForCheck();
     }
   }
@@ -76,7 +106,10 @@ export class SelectFieldComponent implements ControlValueAccessor {
   toggleOpen(): void {
     if (this.isDisabled) return;
     this.isOpen = !this.isOpen;
-    if (this.isOpen) this.onTouchedFn();
+    if (this.isOpen) {
+      this.searchTerm = '';
+      this.onTouchedFn();
+    }
     this.cdr.markForCheck();
   }
 
@@ -137,7 +170,9 @@ export class SelectFieldComponent implements ControlValueAccessor {
   }
 
   onSearchInput(term: string): void {
+    this.searchTerm = term;
     this.searchChange.emit(term);
+    this.cdr.markForCheck();
   }
 
   onScrolledIndexChange(index: number): void {
