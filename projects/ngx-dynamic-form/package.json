@@ -1,6 +1,6 @@
 {
   "name": "@benjimeugi/ngx-dynamic-form",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "Moteur de formulaires dynamiques Angular 19+ basé sur JSON, stylisé avec Tailwind CSS, supportant validation réactive, champs conditionnels, templates personnalisés et dark mode.",
   "keywords": [
     "angular",
